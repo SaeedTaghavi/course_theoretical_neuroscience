@@ -1,0 +1,25 @@
+set term svg size 800,600
+set output "thetaMOD2pi.svg"
+set nokey
+plot for [i=2:21] "output/thetaMOD2pi_t.txt" using (column(1)):(column(i)) w l title "theta".(i-1)
+
+set output "theta_pulsedMOD2pi.svg"
+set nokey
+plot for [i=2:21] "output/theta_pulsedMOD2pi_t.txt" using (column(1)):(column(i)) w l title "../output/theta".(i-1)
+
+set output "order_param.svg"
+set key
+plot "output/order_param.txt" using 1:2 w l, "output/order_param_pulsed.txt" using 1:2 w l
+
+set terminal postscript eps size 15,10 enhanced color font 'Helvetica,25' linewidth 2
+set output "thetaMOD2pi.eps"
+set nokey
+plot for [i=2:21] "output/thetaMOD2pi_t.txt" using (column(1)):(column(i)) w l title "theta".(i-1)
+
+set output "theta_pulsedMOD2pi.eps"
+set nokey
+plot for [i=2:21] "output/theta_pulsedMOD2pi_t.txt" using (column(1)):(column(i)) w l title "../output/theta".(i-1)
+
+set output "order_param.eps"
+set key
+plot "output/order_param.txt" using 1:2 w l, "output/order_param_pulsed.txt" using 1:2 w l

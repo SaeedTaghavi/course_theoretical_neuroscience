@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#" class="wf-raleway-n4-active wf-raleway-n7-active wf-raleway-i4-active wf-oxygenmono-n4-active wf-slabo27px-n4-active wf-active" lang="en-US"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><script async="" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/a"></script>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script id="twitter-wjs" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/widgets.js"></script><script type="text/javascript" async="" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/recaptcha__en.js"></script><script type="text/javascript" async="" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/analytics.js"></script><script src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/0ImxuiU882N-L-6OYtQzfHDD4vA.js"></script><script src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/js.js"></script><script src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/FN0ub9qQoROntPC0k8Mw3vZEq3c.js"></script><link type="text/css" rel="stylesheet" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/social.css"><link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="pingback" href="https://www.bonaccorso.eu/xmlrpc.php">
+<title>Hodgkin-Huxley spiking neuron model in Python - Giuseppe Bonaccorso</title>
+
+<meta name="description" content="Hodgkin-Huxley spiking neuron model simulation written in Python, with mathematical details about the dynamic system and implementation notes.">
+<link rel="canonical" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/a.html">
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hodgkin-Huxley spiking neuron model in Python - Giuseppe Bonaccorso">
+<meta property="og:description" content="Hodgkin-Huxley spiking neuron model simulation written in Python, with mathematical details about the dynamic system and implementation notes.">
+<meta property="og:url" content="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/">
+<meta property="og:site_name" content="Giuseppe Bonaccorso">
+<meta property="article:publisher" content="https://www.facebook.com/bonaccorsoconsulting/">
+<meta property="article:author" content="https://www.facebook.com/giuseppe.bonaccorso">
+<meta property="article:tag" content="hodgkin-huxley">
+<meta property="article:tag" content="Neural networks">
+<meta property="article:tag" content="neuron">
+<meta property="article:tag" content="neuroscience">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="simulation">
+<meta property="article:section" content="Computational Neuroscience">
+<meta property="article:published_time" content="2017-08-19T15:18:27+00:00">
+<meta property="article:modified_time" content="2017-09-30T07:11:05+00:00">
+<meta property="og:updated_time" content="2017-09-30T07:11:05+00:00">
+<meta property="fb:app_id" content="511209512392875">
+<meta property="og:image" content="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_1-768x450.jpg">
+<meta property="og:image:secure_url" content="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_1-768x450.jpg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:description" content="Hodgkin-Huxley spiking neuron model simulation written in Python, with mathematical details about the dynamic system and implementation notes.">
+<meta name="twitter:title" content="Hodgkin-Huxley spiking neuron model in Python - Giuseppe Bonaccorso">
+<meta name="twitter:site" content="@GiuseppeB">
+<meta name="twitter:image" content="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_1-768x450.jpg">
+<meta name="twitter:creator" content="@GiuseppeB">
+<script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"Person","url":"https:\/\/www.bonaccorso.eu\/","sameAs":["https:\/\/www.facebook.com\/bonaccorsoconsulting\/","https:\/\/www.instagram.com\/giuseppebonaccorso\/","https:\/\/it.linkedin.com\/in\/giuseppebonaccorso","https:\/\/www.youtube.com\/channel\/UClcSc-gn6dHmW5LXver8lYQ","https:\/\/it.pinterest.com\/gbonaccorso\/","https:\/\/twitter.com\/GiuseppeB"],"@id":"#person","name":"Giuseppe Bonaccorso"}</script>
+<script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/www.bonaccorso.eu\/","name":"Home"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/www.bonaccorso.eu\/blog\/","name":"Blog"}},{"@type":"ListItem","position":3,"item":{"@id":"https:\/\/www.bonaccorso.eu\/2017\/08\/19\/hodgkin-huxley-spiking-neuron-model-python\/","name":"Hodgkin-Huxley spiking neuron model in Python"}}]}</script>
+
+<link rel="amphtml" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/amp/"><link rel="dns-prefetch" href="https://s0.wp.com/">
+<link rel="dns-prefetch" href="https://www.google.com/">
+<link rel="dns-prefetch" href="https://secure.gravatar.com/">
+<link rel="dns-prefetch" href="https://maxcdn.bootstrapcdn.com/">
+<link rel="dns-prefetch" href="https://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="https://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="Giuseppe Bonaccorso » Feed" href="https://www.bonaccorso.eu/feed/">
+<link rel="alternate" type="application/rss+xml" title="Giuseppe Bonaccorso » Comments Feed" href="https://www.bonaccorso.eu/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Giuseppe Bonaccorso » Hodgkin-Huxley spiking neuron model in Python Comments Feed" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/feed/">
+<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11.2.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11.2.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.bonaccorso.eu\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.1"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="wp-block-library-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="contact-form-7-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/styles.css" type="text/css" media="all">
+<link rel="stylesheet" id="n9m-fontawesome-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/font-awesome.css" type="text/css" media="all">
+<!--[if IE 7]>
+<link rel='stylesheet' id='n9m-fontawesome-ie7-css'  href='https://www.bonaccorso.eu/wp-content/plugins/font-awesome-menus/css/font-awesome-ie7.min.css?ver=5.1' type='text/css' media='all' />
+<![endif]-->
+<link rel="stylesheet" id="sb_instagram_styles-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/sb-instagram.css" type="text/css" media="all">
+<link rel="stylesheet" id="sb-font-awesome-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/font-awesome_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="mks_shortcodes_fntawsm_css-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/font-awesome_004.css" type="text/css" media="screen">
+<link rel="stylesheet" id="mks_shortcodes_simple_line_icons-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/simple-line-icons.css" type="text/css" media="screen">
+<link rel="stylesheet" id="mks_shortcodes_css-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/style_008.css" type="text/css" media="screen">
+<link rel="stylesheet" id="mbt-style-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/frontend-style.css" type="text/css" media="all">
+<link rel="stylesheet" id="mbt-style-pack-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/style_010.css" type="text/css" media="all">
+<link rel="stylesheet" id="mbtpro2-frontend-style-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/frontend.css" type="text/css" media="all">
+<link rel="stylesheet" id="dashicons-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/dashicons.css" type="text/css" media="all">
+<link rel="stylesheet" id="mbtpro3-frontend-css-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/frontend_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="google-fonts-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/css.css" type="text/css" media="all">
+<link rel="stylesheet" id="bootstrap-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/bootstrap.css" type="text/css" media="all">
+<link rel="stylesheet" id="bootstrap-theme-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/bootstrap-theme.css" type="text/css" media="all">
+<link rel="stylesheet" id="ie10-viewport-bug-workaround-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/ie10-viewport-bug-workaround.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/font-awesome_003.css" type="text/css" media="all">
+<link rel="stylesheet" id="doo-style-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/style_003.css" type="text/css" media="all">
+<style id="doo-style-inline-css" type="text/css">
+
+blockquote {
+  border-left: 4px solid #6b96bf;
+} 
+a {
+  color: #6b96bf;
+}
+a:hover,
+a:focus,
+a:active {
+  color: #6b96bf;
+}
+.site-header{
+  border-top: 3px solid #6b96bf;
+}
+.site-title a:hover,
+.site-title a:focus,
+.site-title a:active{
+  color:#6b96bf;
+}
+.main-navigation .menu >li >a:hover,
+.main-navigation .menu >li >a:focus{
+  color:#6b96bf;
+}
+.main-navigation .menu >li ul li a:hover,
+.main-navigation .menu >li ul li a:focus{
+  color:#6b96bf;
+}
+.menu-toggle{
+  color:#6b96bf;
+}
+.responsive-nav >li a:hover,
+.responsive-nav >li a:focus{
+  color: #6b96bf;
+}
+.about-author-name a:hover{
+  color: #6b96bf;
+}
+.entry-title a:hover,
+.entry-title a:focus{
+  color:#6b96bf;
+}  
+.sticky .entry-title,
+.sticky .entry-title a{
+  color:#6b96bf;
+}
+.widget a:hover,
+.widget a:focus{
+  color:#6b96bf;
+}
+.widget_tag_cloud a:hover {
+  background-color: #6b96bf;
+}
+.comment-form .logged-in-as a:hover,
+.comment-form .logged-in-as a:focus{
+  color:#6b96bf;
+}
+.pagination .nav-links a:hover,
+.pagination .nav-links a:focus{
+  background:#6b96bf;
+}
+.pagination .nav-links .current{
+  background:#6b96bf;
+}
+.site-info a:hover,
+.site-info a:focus{
+  color:#6b96bf;
+}
+    
+</style>
+<link rel="stylesheet" id="meks-ads-widget-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/style_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="meks_instagram-widget-styles-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/widget.css" type="text/css" media="all">
+<link rel="stylesheet" id="meks-flickr-widget-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/style_004.css" type="text/css" media="all">
+<link rel="stylesheet" id="meks-author-widget-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/style_006.css" type="text/css" media="all">
+<link rel="stylesheet" id="meks-social-widget-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/style_007.css" type="text/css" media="all">
+<link rel="stylesheet" id="meks-themeforest-widget-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/style_009.css" type="text/css" media="all">
+<link rel="stylesheet" id="wpdevelop-bts-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/bootstrap_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="wpdevelop-bts-theme-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/bootstrap-theme_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="opsd-client-pages-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/client.css" type="text/css" media="all">
+<link rel="stylesheet" id="opsd-admin-popover-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/popover.css" type="text/css" media="all">
+<link rel="stylesheet" id="opsd-calendar-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/calendar.css" type="text/css" media="all">
+<link rel="stylesheet" id="social-logos-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/social-logos.css" type="text/css" media="all">
+<link rel="stylesheet" id="jetpack_css-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/jetpack.css" type="text/css" media="all">
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/jquery.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/jquery-migrate.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/related-posts.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/main.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/core.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/widget.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/accordion.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/frontend.js"></script>
+<!--[if lt IE 9]>
+<script type='text/javascript' src='https://www.bonaccorso.eu/wp-content/themes/doo/assets/js/html5shiv.min.js?ver=3.7.3'></script>
+<![endif]-->
+<!--[if lt IE 9]>
+<script type='text/javascript' src='https://www.bonaccorso.eu/wp-content/themes/doo/assets/js/respond.min.js?ver=1.4.2'></script>
+<![endif]-->
+<link rel="https://api.w.org/" href="https://www.bonaccorso.eu/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.bonaccorso.eu/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://www.bonaccorso.eu/wp-includes/wlwmanifest.xml">
+<link rel="shortlink" href="https://wp.me/p6M2CB-iy">
+<link rel="alternate" type="application/json+oembed" href="https://www.bonaccorso.eu/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F">
+<link rel="alternate" type="text/xml+oembed" href="https://www.bonaccorso.eu/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F&amp;format=xml">
+<style type="text/css">.mbt-book .mbt-book-buybuttons .mbt-book-buybutton img { width: 144px; height: 25px; } .mbt-book .mbt-book-buybuttons .mbt-book-buybutton { padding: 3px 6px 0px 0px; }.mbt-book-archive .mbt-book .mbt-book-buybuttons .mbt-book-buybutton img { width: 144px; height: 25px; } .mbt-book-archive .mbt-book .mbt-book-buybuttons .mbt-book-buybutton { padding: 3px 6px 0px 0px; }.mbt-featured-book-widget .mbt-book-buybuttons .mbt-book-buybutton img { width: 144px; height: 25px; } .mbt-featured-book-widget .mbt-book-buybuttons .mbt-book-buybutton { padding: 3px 6px 0px 0px; }</style> <script type="text/javascript">
+		window.ajaxurl = "https://www.bonaccorso.eu/wp-admin/admin-ajax.php";
+	</script>
+<style type="text/css">.mbt-book-buybuttons .mbt-universal-buybutton { margin: 0; display: inline-block; box-sizing: border-box; }.mbt-book .mbt-book-buybuttons .mbt-universal-buybutton { font-size: 13px; line-height: 13px; padding: 5px 8px; width: 144px; min-height: 25px; }.mbt-book-archive .mbt-book .mbt-book-buybuttons .mbt-universal-buybutton { font-size: 13px; line-height: 13px; padding: 5px 8px; width: 144px; min-height: 25px; }.mbt-featured-book-widget .mbt-book-buybuttons .mbt-universal-buybutton { font-size: 13px; line-height: 13px; padding: 5px 8px; width: 144px; min-height: 25px; }</style><style type="text/css">@media only screen and (min-width: 768px) {.mbt-book-archive .mbt-book.mbt-grid-book { width: 31.034482758621%; margin-right: 3.448275862069%; }.mbt-book-archive .mbt-book.mbt-grid-book:nth-child(3n+1) { clear: left; }.mbt-book-archive .mbt-book.mbt-grid-book:nth-child(3n) { margin-right: 0; }}</style><style type="text/css"></style>
+<link rel="dns-prefetch" href="https://jetpack.wordpress.com/">
+<link rel="dns-prefetch" href="https://s0.wp.com/">
+<link rel="dns-prefetch" href="https://s1.wp.com/">
+<link rel="dns-prefetch" href="https://s2.wp.com/">
+<link rel="dns-prefetch" href="https://public-api.wordpress.com/">
+<link rel="dns-prefetch" href="https://0.gravatar.com/">
+<link rel="dns-prefetch" href="https://1.gravatar.com/">
+<link rel="dns-prefetch" href="https://2.gravatar.com/">
+<style type="text/css">img#wpstats{display:none}</style><link rel="icon" href="https://www.bonaccorso.eu/wp-content/uploads/2018/09/cropped-gb_bi-32x32.png" sizes="32x32">
+<link rel="icon" href="https://www.bonaccorso.eu/wp-content/uploads/2018/09/cropped-gb_bi-192x192.png" sizes="192x192">
+<link rel="apple-touch-icon-precomposed" href="https://www.bonaccorso.eu/wp-content/uploads/2018/09/cropped-gb_bi-180x180.png">
+<meta name="msapplication-TileImage" content="https://www.bonaccorso.eu/wp-content/uploads/2018/09/cropped-gb_bi-270x270.png">
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Person",
+   "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Berlin",
+        "postalCode": "10585"
+  },
+  "name": "Giuseppe Bonaccorso",
+  "image": "https://www.bonaccorso.eu/wp-content/uploads/2015/09/39-333-284-8002%E2%80%AC-20160710_004638-300x300.jpg",
+  "jobTitle": "Senior Machine Learning Lead",
+  "alumniOf": "Essex, Rome Tor Vergata, Catania",
+  "birthDate": "1979.01.28",
+  "gender": "male",
+  "memberOf": "ACM",
+  "nationality": "Italian",
+  "url": "https://www.bonaccorso.eu",
+  "sameAs": [
+    "https://www.facebook.com/giuseppe.bonaccorso",
+    "https://twitter.com/GiuseppeB",
+    "https://www.linkedin.com/in/giuseppebonaccorso",
+	"https://www.instagram.com/giuseppebonaccorso",
+    "https://plus.google.com/u/0/+GiuseppeBonaccorso",
+	"https://www.youtube.com/channel/UClcSc-gn6dHmW5LXver8lYQ"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.bonaccorso.eu/",
+  "name": "Giuseppe Bonaccorso: Software For Artificial Minds",
+   "author": {
+      "@type": "Person",
+      "name": "Giuseppe Bonaccorso"
+    },
+  "description": "Artificial Intelligence, Machine Learning, Deep Learning, Data Science",
+  "publisher": "Giuseppe Bonaccorso",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.bonaccorso.eu/?s={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"http://schema.org",
+  "@type":"ItemList",
+  "itemListElement":[
+    {
+      "@type":"ListItem",
+      "position":1,
+      "url":"https://www.bonaccorso.eu/2018/08/28/machine-learning-algorithms-second-edition/"
+    },
+    {
+      "@type":"ListItem",
+      "position":2,
+      "url":"https://www.bonaccorso.eu/2018/05/24/mastering-machine-learning-algorithms/"
+    },
+    {
+      "@type":"ListItem",
+      "position":3,
+      "url":"https://www.bonaccorso.eu/2017/07/23/machine-learning-algorithms/"
+    },
+    {
+      "@type":"ListItem",
+      "position":4,
+      "url":"https://www.bonaccorso.eu/2018/03/22/fundamentals-machine-learning-scikit-learn/"
+    },
+    {
+      "@type":"ListItem",
+      "position":5,
+      "url":"https://www.bonaccorso.eu/2018/02/26/getting-started-nlp-deep-learning-python/"
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/css_002.css" media="all"><style>
+            h1, h2, h3, h4, h5, h6, headers {
+              font-family: 'Raleway', sans-serif !important;
+            }
+          
+            body {
+              font-family: 'Raleway', sans-serif !important;
+            }
+          
+            body > .container > .site > .site-header > .site-branding.clearfix {
+              font-family: 'Oxygen Mono', monospace !important;
+            }
+          
+            undefined {
+              font-family: 'Slabo 27px', serif !important;
+            }
+          </style><script src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/wp-emoji-release.js" type="text/javascript" defer="defer"></script><link rel="stylesheet" type="text/css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/prettify.css"><link rel="stylesheet" type="text/css" media="all" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/style_005.css"><style type="text/css"></style><script src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/webfont.js" async=""></script><link rel="stylesheet" type="text/css" id="gravatar-card-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/hovercard.css"><link rel="stylesheet" type="text/css" id="gravatar-card-services-css" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/services.css"></head>
+<body class="post-template-default single single-post postid-1150 single-format-standard" data-cf-google-fonts-state="boostrapping">
+<div class="container">
+<div id="page" class="site">
+<header id="masthead" class="site-header">
+<div class="site-branding clearfix" cfapps-selector="body &gt; .container &gt; .site &gt; .site-header &gt; .site-branding.clearfix">
+<div class="site-branding-logo ">
+<h1 class="site-title"><a href="https://www.bonaccorso.eu/" rel="home">Giuseppe Bonaccorso</a></h1>
+<p class="site-description">Artificial Intelligence – Machine Learning – Data Science</p>
+</div>
+<button class="menu-toggle navbar-toggle" data-toggle="collapse" data-target="#main-navigation-collapse"><i class="fa fa-bars"></i></button>
+<div id="main-navigation-collapse" class="collapse navbar-collapse">
+<nav class="menu-main-menu-container"><ul id="menu-main-menu" class="nav navbar-nav responsive-nav hidden-md hidden-lg"><li id="menu-item-26" class="menu-item menu-item-type-post_type menu-item-object-page current_page_parent menu-item-26"><a href="https://www.bonaccorso.eu/blog/"><i class="icon-th-large"></i><span class="fontawesome-text"> Blog</span></a></li>
+<li id="menu-item-2225" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2225"><a href="https://www.bonaccorso.eu/books/"><i class="icon-book"></i><span class="fontawesome-text"> Books</span></a></li>
+<li id="menu-item-51" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-51"><a href="https://www.bonaccorso.eu/resume/"><i class="icon-briefcase"></i><span class="fontawesome-text"> Resume / CV</span></a></li>
+<li id="menu-item-1252" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1252"><a href="https://www.bonaccorso.eu/bonaccorso-law/"><i class="icon-paperclip"></i><span class="fontawesome-text"> Bonaccorso’s Law</span></a></li>
+<li id="menu-item-1274" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1274"><a href="https://www.bonaccorso.eu/ai-cognitive-pychology-essays-italian/"><i class="icon-file-text"></i><span class="fontawesome-text"> Essays</span></a></li>
+<li id="menu-item-20" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-20"><a href="https://www.bonaccorso.eu/contact/"><i class="icon-envelope"></i><span class="fontawesome-text"> Contact</span></a></li>
+<li id="menu-item-929" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-929"><a href="https://www.bonaccorso.eu/testimonials/"><i class="icon-check"></i><span class="fontawesome-text"> Testimonials</span></a></li>
+<li id="menu-item-169" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-169"><a href="https://www.bonaccorso.eu/gallery/"><i class="icon-instagram"></i><span class="fontawesome-text"> Gallery</span></a></li>
+<li id="menu-item-67" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-67"><a href="https://www.bonaccorso.eu/disclaimer/"><i class="icon-info"></i><span class="fontawesome-text"> Disclaimer</span></a></li>
+</ul></nav>
+</div>
+</div>
+</header>
+<div id="site-navigation" class="main-navigation clearfix">
+<nav class="menu-main-menu-container"><ul id="menu-main-menu-1" class="menu hidden-sm hidden-xs"><li class="menu-item menu-item-type-post_type menu-item-object-page current_page_parent menu-item-26"><a href="https://www.bonaccorso.eu/blog/"><i class="icon-th-large"></i><span class="fontawesome-text"> Blog</span></a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2225"><a href="https://www.bonaccorso.eu/books/"><i class="icon-book"></i><span class="fontawesome-text"> Books</span></a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-51"><a href="https://www.bonaccorso.eu/resume/"><i class="icon-briefcase"></i><span class="fontawesome-text"> Resume / CV</span></a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1252"><a href="https://www.bonaccorso.eu/bonaccorso-law/"><i class="icon-paperclip"></i><span class="fontawesome-text"> Bonaccorso’s Law</span></a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1274"><a href="https://www.bonaccorso.eu/ai-cognitive-pychology-essays-italian/"><i class="icon-file-text"></i><span class="fontawesome-text"> Essays</span></a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-20"><a href="https://www.bonaccorso.eu/contact/"><i class="icon-envelope"></i><span class="fontawesome-text"> Contact</span></a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-929"><a href="https://www.bonaccorso.eu/testimonials/"><i class="icon-check"></i><span class="fontawesome-text"> Testimonials</span></a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-169"><a href="https://www.bonaccorso.eu/gallery/"><i class="icon-instagram"></i><span class="fontawesome-text"> Gallery</span></a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-67"><a href="https://www.bonaccorso.eu/disclaimer/"><i class="icon-info"></i><span class="fontawesome-text"> Disclaimer</span></a></li>
+</ul></nav>
+</div>
+<div id="content" class="site-content">
+<div class="row">
+<div class="col-md-8 sidebar-right">
+<div id="primary" class="content-area">
+<main id="main" class="site-main">
+<article id="post-1150" class="post-1150 post type-post status-publish format-standard hentry category-artificial-intelligence category-complex-systems category-computational-neuroscience category-neural-networks category-python tag-hodgkin-huxley tag-neural-networks tag-neuron tag-neuroscience tag-python tag-simulation">
+<div class="post-content">
+<header class="entry-header clearfix"><h1 class="entry-title">Hodgkin-Huxley spiking neuron model in Python</h1><div class="entry-meta clearfix"><span class="posted-on"><a href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/" rel="bookmark"><time class="entry-date published" datetime="2017-08-19T17:18:27+01:00">08/19/2017</time><time class="updated" datetime="2017-09-30T09:11:05+01:00">09/30/2017</time></a></span><span class="cat-links"><a href="https://www.bonaccorso.eu/category/generic/artificial-intelligence/" rel="category tag">Artificial Intelligence</a>, <a href="https://www.bonaccorso.eu/category/complex-systems/" rel="category tag">Complex Systems</a>, <a href="https://www.bonaccorso.eu/category/computational-neuroscience/" rel="category tag">Computational Neuroscience</a>, <a href="https://www.bonaccorso.eu/category/machine-learning/neural-networks/" rel="category tag">Neural networks</a>, <a href="https://www.bonaccorso.eu/category/software/python/" rel="category tag">Python</a></span><span class="comments-link"><a href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/#comments">No Comments</a></span></div></header>
+<div class="entry-content clearfix">
+<p>The <a href="https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model" target="_blank" rel="noopener">Hodgkin-Huxley model</a>&nbsp;(published
+ on 1952 in The Journal of Physiology [1]) is the most famous spiking 
+neuron model (also if there are simpler alternatives like the 
+“Integrate-and-fire” model which performs quite well). It’s made up of a
+ system of four ordinary differential equations that can be easily 
+integrated using several different tools. The main idea is based on an 
+electrical representation of the neuron, considering only Potassium (K) 
+and Sodium (Na) voltage-gated ion channels (even if it can be extended 
+to include more channels). A schematic representation is shown in the 
+following figure:</p>
+<p style="text-align: center;"><img data-attachment-id="1154" data-permalink="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/hh_1/" data-orig-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_1.jpg" data-orig-size="968,567" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="hh_1" data-image-description="" data-medium-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_1-300x176.jpg" data-large-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_1.jpg" class="aligncenter wp-image-1154" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/hh_1-768x450.jpg" alt="" srcset="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_1-768x450.jpg 768w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_1-300x176.jpg 300w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_1.jpg 968w" sizes="(max-width: 430px) 100vw, 430px" width="430" height="252"></p>
+<p>The elements are:</p>
+<ul>
+<li>Cm: a capacitance per unit area representing the membrane lipid-bilayer (adopted value: 1&nbsp;µF/cm²)</li>
+<li>gNa: voltage-controlled conductance per unit area associated with the Sodium (Na) ion-channel (adopted value: 120&nbsp;µS/cm²)</li>
+<li>gK:&nbsp;voltage-controlled conductance per unit area associated with the Potassium (K) ion-channel (adopted value: 36 µS/cm²)</li>
+<li>gl: conductance per unit area associated with the leak channels (adopted value: 0.3&nbsp;36 µS/cm²)</li>
+<li>VNa: voltage source representing the electrochemical gradient for Sodium ions (adopted value: 115 mV)</li>
+<li>VK:&nbsp;voltage source representing the electrochemical gradient for Potassium ions (adopted value: -12 mV)</li>
+<li>Vl: voltage source that determines the leakage current density together with gl (adopted value: 10.613 mV)</li>
+</ul>
+<p>In the scheme, the external stimulus current is not shown, however, 
+we assume its presence as a current density (I) encoding the input 
+signal. All the experimental values are the same proposed by the authors
+ in [1] and refer to an equilibrium potential of 0 V. The system is 
+defined through the following ODE system:</p>
+<p style="text-align: center;"><img data-attachment-id="1155" data-permalink="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/hh_2/" data-orig-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_2.jpg" data-orig-size="1082,398" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="hh_2" data-image-description="" data-medium-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_2-300x110.jpg" data-large-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_2-1024x377.jpg" class="aligncenter wp-image-1155" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/hh_2-768x282.jpg" alt="" srcset="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_2-768x282.jpg 768w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_2-300x110.jpg 300w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_2-1024x377.jpg 1024w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_2.jpg 1082w" sizes="(max-width: 545px) 100vw, 545px" width="545" height="200"></p>
+<p>The first equation defines the derivative of Vm considering the 
+external stimulus (I) and the contribution of K, Na, and leakage current
+ densities. The variables n, m, and h are associated with the 
+probability of each channel to open and they are strictly dependent on 
+the nature of the channel. For example, the K channel is voltage-gated 
+and has four sub-units that must be all open in order to allow the 
+current to flow, therefore its probability is n to the power of 4. 
+Sodium has a slightly more complex behavior and needs two different 
+factors (m and h) with autonomous dynamics. The last three equations 
+describe the ion-channel kinetic model by computing the derivatives of 
+n, m, and h as functions of the same variables and two voltage-dependent
+ functions. The first term is the number of closed channels that are 
+opening, while the second term is the number of open channels that are 
+closing.</p>
+<p>Hodgkin and Huxley suggest the following functions:</p>
+<p style="text-align: center;"><img data-attachment-id="1156" data-permalink="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/hh_3/" data-orig-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_3.jpg" data-orig-size="479,549" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="hh_3" data-image-description="" data-medium-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_3-262x300.jpg" data-large-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_3.jpg" class="aligncenter wp-image-1156" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/hh_3.jpg" alt="" srcset="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_3.jpg 479w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_3-262x300.jpg 262w" sizes="(max-width: 237px) 100vw, 237px" width="237" height="272"></p>
+<p>In the simulation, we’re going to use a double-impulsive current 
+density as stimulus (however, any other signal can be used to test 
+different behaviors). The time range is [0, 50ms]:</p>
+<p style="text-align: center;"><img data-attachment-id="1157" data-permalink="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/hh_4/" data-orig-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_4.jpg" data-orig-size="1841,1092" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="hh_4" data-image-description="" data-medium-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_4-300x178.jpg" data-large-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_4-1024x607.jpg" class="aligncenter wp-image-1157" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/hh_4-768x456.jpg" alt="" srcset="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_4-768x456.jpg 768w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_4-300x178.jpg 300w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_4-1024x607.jpg 1024w" sizes="(max-width: 623px) 100vw, 623px" width="623" height="370"></p>
+<p>The resulting impulsive neuron behavior is shown in the following plot:</p>
+<p style="text-align: center;"><img data-attachment-id="1158" data-permalink="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/hh_5/" data-orig-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_5.jpg" data-orig-size="1826,1114" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="hh_5" data-image-description="" data-medium-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_5-300x183.jpg" data-large-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_5-1024x625.jpg" class="aligncenter wp-image-1158" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/hh_5-768x469.jpg" alt="" srcset="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_5-768x469.jpg 768w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_5-300x183.jpg 300w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_5-1024x625.jpg 1024w" sizes="(max-width: 625px) 100vw, 625px" width="625" height="382"></p>
+<p>It’s also possible to observe the limit cycles present in the dynamic
+ system. In the following plot, the trajectories Vm – n, and Vm – m are 
+plotted:</p>
+<p style="text-align: center;"><img data-attachment-id="1159" data-permalink="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/hh_6/" data-orig-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_6.jpg" data-orig-size="1518,1476" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="hh_6" data-image-description="" data-medium-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_6-300x292.jpg" data-large-file="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_6-1024x996.jpg" class="aligncenter wp-image-1159" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/hh_6-768x747.jpg" alt="" srcset="https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_6-768x747.jpg 768w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_6-300x292.jpg 300w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_6-1024x996.jpg 1024w, https://www.bonaccorso.eu/wp-content/uploads/2017/08/hh_6.jpg 1518w" sizes="(max-width: 614px) 100vw, 614px" width="614" height="597"></p>
+<p>It’s possible to observe how the probabilities (proportional to n, m,
+ and h) for ion-channels to be opened span from a minimum to a maximum 
+value according to n and Vm in a cyclic fashion. This allows the 
+oscillations: steady state, potential increase, spike, potential 
+decrease, steady state.</p>
+<p>The complete Python code is available in this <a href="https://gist.github.com/giuseppebonaccorso/60ce3eb3a829b94abf64ab2b7a56aaef" target="_blank" rel="noopener">GIST</a>:</p>
+<div class="oembed-gist"><script src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/60ce3eb3a829b94abf64ab2b7a56aaef.js" type="text/javascript"></script><link rel="stylesheet" href="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/gist-embed-a9a1cf2ca01efd362bfa52312712ae94.css"><div id="gist74922889" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-hodgkin-huxley-main-py" class="file">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-python ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8">
+      <tbody><tr>
+        <td id="file-hodgkin-huxley-main-py-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-hodgkin-huxley-main-py-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> matplotlib.pyplot <span class="pl-k">as</span> plt</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-hodgkin-huxley-main-py-LC2" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> numpy <span class="pl-k">as</span> np</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-hodgkin-huxley-main-py-LC3" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-hodgkin-huxley-main-py-LC4" class="blob-code blob-code-inner js-file-line"><span class="pl-k">from</span> scipy.integrate <span class="pl-k">import</span> odeint</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-hodgkin-huxley-main-py-LC5" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-hodgkin-huxley-main-py-LC6" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Set random seed (for reproducibility)</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-hodgkin-huxley-main-py-LC7" class="blob-code blob-code-inner js-file-line">np.random.seed(<span class="pl-c1">1000</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-hodgkin-huxley-main-py-LC8" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-hodgkin-huxley-main-py-LC9" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Start and end time (in milliseconds)</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-hodgkin-huxley-main-py-LC10" class="blob-code blob-code-inner js-file-line">tmin <span class="pl-k">=</span> <span class="pl-c1">0.0</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-hodgkin-huxley-main-py-LC11" class="blob-code blob-code-inner js-file-line">tmax <span class="pl-k">=</span> <span class="pl-c1">50.0</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-hodgkin-huxley-main-py-LC12" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-hodgkin-huxley-main-py-LC13" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Average potassium channel conductance per unit area (mS/cm^2)</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-hodgkin-huxley-main-py-LC14" class="blob-code blob-code-inner js-file-line">gK <span class="pl-k">=</span> <span class="pl-c1">36.0</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-hodgkin-huxley-main-py-LC15" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-hodgkin-huxley-main-py-LC16" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Average sodoum channel conductance per unit area (mS/cm^2)</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="file-hodgkin-huxley-main-py-LC17" class="blob-code blob-code-inner js-file-line">gNa <span class="pl-k">=</span> <span class="pl-c1">120.0</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="file-hodgkin-huxley-main-py-LC18" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="file-hodgkin-huxley-main-py-LC19" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Average leak channel conductance per unit area (mS/cm^2)</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L20" class="blob-num js-line-number" data-line-number="20"></td>
+        <td id="file-hodgkin-huxley-main-py-LC20" class="blob-code blob-code-inner js-file-line">gL <span class="pl-k">=</span> <span class="pl-c1">0.3</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L21" class="blob-num js-line-number" data-line-number="21"></td>
+        <td id="file-hodgkin-huxley-main-py-LC21" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L22" class="blob-num js-line-number" data-line-number="22"></td>
+        <td id="file-hodgkin-huxley-main-py-LC22" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Membrane capacitance per unit area (uF/cm^2)</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L23" class="blob-num js-line-number" data-line-number="23"></td>
+        <td id="file-hodgkin-huxley-main-py-LC23" class="blob-code blob-code-inner js-file-line">Cm <span class="pl-k">=</span> <span class="pl-c1">1.0</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L24" class="blob-num js-line-number" data-line-number="24"></td>
+        <td id="file-hodgkin-huxley-main-py-LC24" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L25" class="blob-num js-line-number" data-line-number="25"></td>
+        <td id="file-hodgkin-huxley-main-py-LC25" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Potassium potential (mV)</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L26" class="blob-num js-line-number" data-line-number="26"></td>
+        <td id="file-hodgkin-huxley-main-py-LC26" class="blob-code blob-code-inner js-file-line"><span class="pl-c1">VK</span> <span class="pl-k">=</span> <span class="pl-k">-</span><span class="pl-c1">12.0</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L27" class="blob-num js-line-number" data-line-number="27"></td>
+        <td id="file-hodgkin-huxley-main-py-LC27" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L28" class="blob-num js-line-number" data-line-number="28"></td>
+        <td id="file-hodgkin-huxley-main-py-LC28" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Sodium potential (mV)</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L29" class="blob-num js-line-number" data-line-number="29"></td>
+        <td id="file-hodgkin-huxley-main-py-LC29" class="blob-code blob-code-inner js-file-line">VNa <span class="pl-k">=</span> <span class="pl-c1">115.0</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L30" class="blob-num js-line-number" data-line-number="30"></td>
+        <td id="file-hodgkin-huxley-main-py-LC30" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L31" class="blob-num js-line-number" data-line-number="31"></td>
+        <td id="file-hodgkin-huxley-main-py-LC31" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Leak potential (mV)</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L32" class="blob-num js-line-number" data-line-number="32"></td>
+        <td id="file-hodgkin-huxley-main-py-LC32" class="blob-code blob-code-inner js-file-line">Vl <span class="pl-k">=</span> <span class="pl-c1">10.613</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L33" class="blob-num js-line-number" data-line-number="33"></td>
+        <td id="file-hodgkin-huxley-main-py-LC33" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L34" class="blob-num js-line-number" data-line-number="34"></td>
+        <td id="file-hodgkin-huxley-main-py-LC34" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Time values</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L35" class="blob-num js-line-number" data-line-number="35"></td>
+        <td id="file-hodgkin-huxley-main-py-LC35" class="blob-code blob-code-inner js-file-line">T <span class="pl-k">=</span> np.linspace(tmin, tmax, <span class="pl-c1">10000</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L36" class="blob-num js-line-number" data-line-number="36"></td>
+        <td id="file-hodgkin-huxley-main-py-LC36" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L37" class="blob-num js-line-number" data-line-number="37"></td>
+        <td id="file-hodgkin-huxley-main-py-LC37" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Potassium ion-channel rate functions</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L38" class="blob-num js-line-number" data-line-number="38"></td>
+        <td id="file-hodgkin-huxley-main-py-LC38" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L39" class="blob-num js-line-number" data-line-number="39"></td>
+        <td id="file-hodgkin-huxley-main-py-LC39" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">alpha_n</span>(<span class="pl-smi">Vm</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L40" class="blob-num js-line-number" data-line-number="40"></td>
+        <td id="file-hodgkin-huxley-main-py-LC40" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> (<span class="pl-c1">0.01</span> <span class="pl-k">*</span> (<span class="pl-c1">10.0</span> <span class="pl-k">-</span> Vm)) <span class="pl-k">/</span> (np.exp(<span class="pl-c1">1.0</span> <span class="pl-k">-</span> (<span class="pl-c1">0.1</span> <span class="pl-k">*</span> Vm)) <span class="pl-k">-</span> <span class="pl-c1">1.0</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L41" class="blob-num js-line-number" data-line-number="41"></td>
+        <td id="file-hodgkin-huxley-main-py-LC41" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L42" class="blob-num js-line-number" data-line-number="42"></td>
+        <td id="file-hodgkin-huxley-main-py-LC42" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">beta_n</span>(<span class="pl-smi">Vm</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L43" class="blob-num js-line-number" data-line-number="43"></td>
+        <td id="file-hodgkin-huxley-main-py-LC43" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> <span class="pl-c1">0.125</span> <span class="pl-k">*</span> np.exp(<span class="pl-k">-</span>Vm <span class="pl-k">/</span> <span class="pl-c1">80.0</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L44" class="blob-num js-line-number" data-line-number="44"></td>
+        <td id="file-hodgkin-huxley-main-py-LC44" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L45" class="blob-num js-line-number" data-line-number="45"></td>
+        <td id="file-hodgkin-huxley-main-py-LC45" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Sodium ion-channel rate functions</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L46" class="blob-num js-line-number" data-line-number="46"></td>
+        <td id="file-hodgkin-huxley-main-py-LC46" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L47" class="blob-num js-line-number" data-line-number="47"></td>
+        <td id="file-hodgkin-huxley-main-py-LC47" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">alpha_m</span>(<span class="pl-smi">Vm</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L48" class="blob-num js-line-number" data-line-number="48"></td>
+        <td id="file-hodgkin-huxley-main-py-LC48" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> (<span class="pl-c1">0.1</span> <span class="pl-k">*</span> (<span class="pl-c1">25.0</span> <span class="pl-k">-</span> Vm)) <span class="pl-k">/</span> (np.exp(<span class="pl-c1">2.5</span> <span class="pl-k">-</span> (<span class="pl-c1">0.1</span> <span class="pl-k">*</span> Vm)) <span class="pl-k">-</span> <span class="pl-c1">1.0</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L49" class="blob-num js-line-number" data-line-number="49"></td>
+        <td id="file-hodgkin-huxley-main-py-LC49" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L50" class="blob-num js-line-number" data-line-number="50"></td>
+        <td id="file-hodgkin-huxley-main-py-LC50" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">beta_m</span>(<span class="pl-smi">Vm</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L51" class="blob-num js-line-number" data-line-number="51"></td>
+        <td id="file-hodgkin-huxley-main-py-LC51" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> <span class="pl-c1">4.0</span> <span class="pl-k">*</span> np.exp(<span class="pl-k">-</span>Vm <span class="pl-k">/</span> <span class="pl-c1">18.0</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L52" class="blob-num js-line-number" data-line-number="52"></td>
+        <td id="file-hodgkin-huxley-main-py-LC52" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L53" class="blob-num js-line-number" data-line-number="53"></td>
+        <td id="file-hodgkin-huxley-main-py-LC53" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">alpha_h</span>(<span class="pl-smi">Vm</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L54" class="blob-num js-line-number" data-line-number="54"></td>
+        <td id="file-hodgkin-huxley-main-py-LC54" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> <span class="pl-c1">0.07</span> <span class="pl-k">*</span> np.exp(<span class="pl-k">-</span>Vm <span class="pl-k">/</span> <span class="pl-c1">20.0</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L55" class="blob-num js-line-number" data-line-number="55"></td>
+        <td id="file-hodgkin-huxley-main-py-LC55" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L56" class="blob-num js-line-number" data-line-number="56"></td>
+        <td id="file-hodgkin-huxley-main-py-LC56" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">beta_h</span>(<span class="pl-smi">Vm</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L57" class="blob-num js-line-number" data-line-number="57"></td>
+        <td id="file-hodgkin-huxley-main-py-LC57" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> <span class="pl-c1">1.0</span> <span class="pl-k">/</span> (np.exp(<span class="pl-c1">3.0</span> <span class="pl-k">-</span> (<span class="pl-c1">0.1</span> <span class="pl-k">*</span> Vm)) <span class="pl-k">+</span> <span class="pl-c1">1.0</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L58" class="blob-num js-line-number" data-line-number="58"></td>
+        <td id="file-hodgkin-huxley-main-py-LC58" class="blob-code blob-code-inner js-file-line">  </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L59" class="blob-num js-line-number" data-line-number="59"></td>
+        <td id="file-hodgkin-huxley-main-py-LC59" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> n, m, and h steady-state values</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L60" class="blob-num js-line-number" data-line-number="60"></td>
+        <td id="file-hodgkin-huxley-main-py-LC60" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L61" class="blob-num js-line-number" data-line-number="61"></td>
+        <td id="file-hodgkin-huxley-main-py-LC61" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">n_inf</span>(<span class="pl-smi">Vm</span><span class="pl-k">=</span><span class="pl-c1">0.0</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L62" class="blob-num js-line-number" data-line-number="62"></td>
+        <td id="file-hodgkin-huxley-main-py-LC62" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> alpha_n(Vm) <span class="pl-k">/</span> (alpha_n(Vm) <span class="pl-k">+</span> beta_n(Vm))</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L63" class="blob-num js-line-number" data-line-number="63"></td>
+        <td id="file-hodgkin-huxley-main-py-LC63" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L64" class="blob-num js-line-number" data-line-number="64"></td>
+        <td id="file-hodgkin-huxley-main-py-LC64" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">m_inf</span>(<span class="pl-smi">Vm</span><span class="pl-k">=</span><span class="pl-c1">0.0</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L65" class="blob-num js-line-number" data-line-number="65"></td>
+        <td id="file-hodgkin-huxley-main-py-LC65" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> alpha_m(Vm) <span class="pl-k">/</span> (alpha_m(Vm) <span class="pl-k">+</span> beta_m(Vm))</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L66" class="blob-num js-line-number" data-line-number="66"></td>
+        <td id="file-hodgkin-huxley-main-py-LC66" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L67" class="blob-num js-line-number" data-line-number="67"></td>
+        <td id="file-hodgkin-huxley-main-py-LC67" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">h_inf</span>(<span class="pl-smi">Vm</span><span class="pl-k">=</span><span class="pl-c1">0.0</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L68" class="blob-num js-line-number" data-line-number="68"></td>
+        <td id="file-hodgkin-huxley-main-py-LC68" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> alpha_h(Vm) <span class="pl-k">/</span> (alpha_h(Vm) <span class="pl-k">+</span> beta_h(Vm))</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L69" class="blob-num js-line-number" data-line-number="69"></td>
+        <td id="file-hodgkin-huxley-main-py-LC69" class="blob-code blob-code-inner js-file-line">  </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L70" class="blob-num js-line-number" data-line-number="70"></td>
+        <td id="file-hodgkin-huxley-main-py-LC70" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Input stimulus</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L71" class="blob-num js-line-number" data-line-number="71"></td>
+        <td id="file-hodgkin-huxley-main-py-LC71" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">Id</span>(<span class="pl-smi">t</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L72" class="blob-num js-line-number" data-line-number="72"></td>
+        <td id="file-hodgkin-huxley-main-py-LC72" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">if</span> <span class="pl-c1">0.0</span> <span class="pl-k">&lt;</span> t <span class="pl-k">&lt;</span> <span class="pl-c1">1.0</span>:</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L73" class="blob-num js-line-number" data-line-number="73"></td>
+        <td id="file-hodgkin-huxley-main-py-LC73" class="blob-code blob-code-inner js-file-line">        <span class="pl-k">return</span> <span class="pl-c1">150.0</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L74" class="blob-num js-line-number" data-line-number="74"></td>
+        <td id="file-hodgkin-huxley-main-py-LC74" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">elif</span> <span class="pl-c1">10.0</span> <span class="pl-k">&lt;</span> t <span class="pl-k">&lt;</span> <span class="pl-c1">11.0</span>:</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L75" class="blob-num js-line-number" data-line-number="75"></td>
+        <td id="file-hodgkin-huxley-main-py-LC75" class="blob-code blob-code-inner js-file-line">        <span class="pl-k">return</span> <span class="pl-c1">50.0</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L76" class="blob-num js-line-number" data-line-number="76"></td>
+        <td id="file-hodgkin-huxley-main-py-LC76" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> <span class="pl-c1">0.0</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L77" class="blob-num js-line-number" data-line-number="77"></td>
+        <td id="file-hodgkin-huxley-main-py-LC77" class="blob-code blob-code-inner js-file-line">  </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L78" class="blob-num js-line-number" data-line-number="78"></td>
+        <td id="file-hodgkin-huxley-main-py-LC78" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Compute derivatives</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L79" class="blob-num js-line-number" data-line-number="79"></td>
+        <td id="file-hodgkin-huxley-main-py-LC79" class="blob-code blob-code-inner js-file-line"><span class="pl-k">def</span> <span class="pl-en">compute_derivatives</span>(<span class="pl-smi">y</span>, <span class="pl-smi">t0</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L80" class="blob-num js-line-number" data-line-number="80"></td>
+        <td id="file-hodgkin-huxley-main-py-LC80" class="blob-code blob-code-inner js-file-line">    dy <span class="pl-k">=</span> np.zeros((<span class="pl-c1">4</span>,))</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L81" class="blob-num js-line-number" data-line-number="81"></td>
+        <td id="file-hodgkin-huxley-main-py-LC81" class="blob-code blob-code-inner js-file-line">    </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L82" class="blob-num js-line-number" data-line-number="82"></td>
+        <td id="file-hodgkin-huxley-main-py-LC82" class="blob-code blob-code-inner js-file-line">    Vm <span class="pl-k">=</span> y[<span class="pl-c1">0</span>]</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L83" class="blob-num js-line-number" data-line-number="83"></td>
+        <td id="file-hodgkin-huxley-main-py-LC83" class="blob-code blob-code-inner js-file-line">    n <span class="pl-k">=</span> y[<span class="pl-c1">1</span>]</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L84" class="blob-num js-line-number" data-line-number="84"></td>
+        <td id="file-hodgkin-huxley-main-py-LC84" class="blob-code blob-code-inner js-file-line">    m <span class="pl-k">=</span> y[<span class="pl-c1">2</span>]</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L85" class="blob-num js-line-number" data-line-number="85"></td>
+        <td id="file-hodgkin-huxley-main-py-LC85" class="blob-code blob-code-inner js-file-line">    h <span class="pl-k">=</span> y[<span class="pl-c1">3</span>]</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L86" class="blob-num js-line-number" data-line-number="86"></td>
+        <td id="file-hodgkin-huxley-main-py-LC86" class="blob-code blob-code-inner js-file-line">    </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L87" class="blob-num js-line-number" data-line-number="87"></td>
+        <td id="file-hodgkin-huxley-main-py-LC87" class="blob-code blob-code-inner js-file-line">    <span class="pl-c"><span class="pl-c">#</span> dVm/dt</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L88" class="blob-num js-line-number" data-line-number="88"></td>
+        <td id="file-hodgkin-huxley-main-py-LC88" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">GK</span> <span class="pl-k">=</span> (gK <span class="pl-k">/</span> Cm) <span class="pl-k">*</span> np.power(n, <span class="pl-c1">4.0</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L89" class="blob-num js-line-number" data-line-number="89"></td>
+        <td id="file-hodgkin-huxley-main-py-LC89" class="blob-code blob-code-inner js-file-line">    GNa <span class="pl-k">=</span> (gNa <span class="pl-k">/</span> Cm) <span class="pl-k">*</span> np.power(m, <span class="pl-c1">3.0</span>) <span class="pl-k">*</span> h</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L90" class="blob-num js-line-number" data-line-number="90"></td>
+        <td id="file-hodgkin-huxley-main-py-LC90" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">GL</span> <span class="pl-k">=</span> gL <span class="pl-k">/</span> Cm</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L91" class="blob-num js-line-number" data-line-number="91"></td>
+        <td id="file-hodgkin-huxley-main-py-LC91" class="blob-code blob-code-inner js-file-line">    </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L92" class="blob-num js-line-number" data-line-number="92"></td>
+        <td id="file-hodgkin-huxley-main-py-LC92" class="blob-code blob-code-inner js-file-line">    dy[<span class="pl-c1">0</span>] <span class="pl-k">=</span> (Id(t0) <span class="pl-k">/</span> Cm) <span class="pl-k">-</span> (<span class="pl-c1">GK</span> <span class="pl-k">*</span> (Vm <span class="pl-k">-</span> <span class="pl-c1">VK</span>)) <span class="pl-k">-</span> (GNa <span class="pl-k">*</span> (Vm <span class="pl-k">-</span> VNa)) <span class="pl-k">-</span> (<span class="pl-c1">GL</span> <span class="pl-k">*</span> (Vm <span class="pl-k">-</span> Vl))</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L93" class="blob-num js-line-number" data-line-number="93"></td>
+        <td id="file-hodgkin-huxley-main-py-LC93" class="blob-code blob-code-inner js-file-line">    </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L94" class="blob-num js-line-number" data-line-number="94"></td>
+        <td id="file-hodgkin-huxley-main-py-LC94" class="blob-code blob-code-inner js-file-line">    <span class="pl-c"><span class="pl-c">#</span> dn/dt</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L95" class="blob-num js-line-number" data-line-number="95"></td>
+        <td id="file-hodgkin-huxley-main-py-LC95" class="blob-code blob-code-inner js-file-line">    dy[<span class="pl-c1">1</span>] <span class="pl-k">=</span> (alpha_n(Vm) <span class="pl-k">*</span> (<span class="pl-c1">1.0</span> <span class="pl-k">-</span> n)) <span class="pl-k">-</span> (beta_n(Vm) <span class="pl-k">*</span> n)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L96" class="blob-num js-line-number" data-line-number="96"></td>
+        <td id="file-hodgkin-huxley-main-py-LC96" class="blob-code blob-code-inner js-file-line">    </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L97" class="blob-num js-line-number" data-line-number="97"></td>
+        <td id="file-hodgkin-huxley-main-py-LC97" class="blob-code blob-code-inner js-file-line">    <span class="pl-c"><span class="pl-c">#</span> dm/dt</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L98" class="blob-num js-line-number" data-line-number="98"></td>
+        <td id="file-hodgkin-huxley-main-py-LC98" class="blob-code blob-code-inner js-file-line">    dy[<span class="pl-c1">2</span>] <span class="pl-k">=</span> (alpha_m(Vm) <span class="pl-k">*</span> (<span class="pl-c1">1.0</span> <span class="pl-k">-</span> m)) <span class="pl-k">-</span> (beta_m(Vm) <span class="pl-k">*</span> m)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L99" class="blob-num js-line-number" data-line-number="99"></td>
+        <td id="file-hodgkin-huxley-main-py-LC99" class="blob-code blob-code-inner js-file-line">    </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L100" class="blob-num js-line-number" data-line-number="100"></td>
+        <td id="file-hodgkin-huxley-main-py-LC100" class="blob-code blob-code-inner js-file-line">    <span class="pl-c"><span class="pl-c">#</span> dh/dt</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L101" class="blob-num js-line-number" data-line-number="101"></td>
+        <td id="file-hodgkin-huxley-main-py-LC101" class="blob-code blob-code-inner js-file-line">    dy[<span class="pl-c1">3</span>] <span class="pl-k">=</span> (alpha_h(Vm) <span class="pl-k">*</span> (<span class="pl-c1">1.0</span> <span class="pl-k">-</span> h)) <span class="pl-k">-</span> (beta_h(Vm) <span class="pl-k">*</span> h)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L102" class="blob-num js-line-number" data-line-number="102"></td>
+        <td id="file-hodgkin-huxley-main-py-LC102" class="blob-code blob-code-inner js-file-line">    </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L103" class="blob-num js-line-number" data-line-number="103"></td>
+        <td id="file-hodgkin-huxley-main-py-LC103" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> dy</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L104" class="blob-num js-line-number" data-line-number="104"></td>
+        <td id="file-hodgkin-huxley-main-py-LC104" class="blob-code blob-code-inner js-file-line">  </td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L105" class="blob-num js-line-number" data-line-number="105"></td>
+        <td id="file-hodgkin-huxley-main-py-LC105" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> State (Vm, n, m, h)</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L106" class="blob-num js-line-number" data-line-number="106"></td>
+        <td id="file-hodgkin-huxley-main-py-LC106" class="blob-code blob-code-inner js-file-line">Y <span class="pl-k">=</span> np.array([<span class="pl-c1">0.0</span>, n_inf(), m_inf(), h_inf()])</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L107" class="blob-num js-line-number" data-line-number="107"></td>
+        <td id="file-hodgkin-huxley-main-py-LC107" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L108" class="blob-num js-line-number" data-line-number="108"></td>
+        <td id="file-hodgkin-huxley-main-py-LC108" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Solve ODE system</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L109" class="blob-num js-line-number" data-line-number="109"></td>
+        <td id="file-hodgkin-huxley-main-py-LC109" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Vy = (Vm[t0:tmax], n[t0:tmax], m[t0:tmax], h[t0:tmax])</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-main-py-L110" class="blob-num js-line-number" data-line-number="110"></td>
+        <td id="file-hodgkin-huxley-main-py-LC110" class="blob-code blob-code-inner js-file-line">Vy <span class="pl-k">=</span> odeint(compute_derivatives, Y, T)</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/giuseppebonaccorso/60ce3eb3a829b94abf64ab2b7a56aaef/raw/d8fc848ee1b749e4d72fe8829cf7339c566b0350/hodgkin-huxley-main.py" style="float:right">view raw</a>
+        <a href="https://gist.github.com/giuseppebonaccorso/60ce3eb3a829b94abf64ab2b7a56aaef#file-hodgkin-huxley-main-py">hodgkin-huxley-main.py</a>
+        hosted with <img draggable="false" class="emoji" alt="❤" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/2764.svg"> by <a href="https://github.com/">GitHub</a>
+      </div>
+    </div>
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-hodgkin-huxley-plots-py" class="file">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-python ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8">
+      <tbody><tr>
+        <td id="file-hodgkin-huxley-plots-py-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Input stimulus</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC2" class="blob-code blob-code-inner js-file-line">Idv <span class="pl-k">=</span> [Id(t) <span class="pl-k">for</span> t <span class="pl-k">in</span> T]</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC3" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC4" class="blob-code blob-code-inner js-file-line">fig, ax <span class="pl-k">=</span> plt.subplots(<span class="pl-v">figsize</span><span class="pl-k">=</span>(<span class="pl-c1">12</span>, <span class="pl-c1">7</span>))</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC5" class="blob-code blob-code-inner js-file-line">ax.plot(T, Idv)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC6" class="blob-code blob-code-inner js-file-line">ax.set_xlabel(<span class="pl-s"><span class="pl-pds">'</span>Time (ms)<span class="pl-pds">'</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC7" class="blob-code blob-code-inner js-file-line">ax.set_ylabel(<span class="pl-sr"><span class="pl-k">r</span><span class="pl-pds">'</span>Current density <span class="pl-c1">(</span>uA/<span class="pl-c1">$</span>cm<span class="pl-c1">^</span>2<span class="pl-c1">$</span><span class="pl-c1">)</span><span class="pl-pds">'</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC8" class="blob-code blob-code-inner js-file-line">ax.set_title(<span class="pl-s"><span class="pl-pds">'</span>Stimulus (Current density)<span class="pl-pds">'</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC9" class="blob-code blob-code-inner js-file-line">plt.grid()</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC10" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC11" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Neuron potential</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC12" class="blob-code blob-code-inner js-file-line">fig, ax <span class="pl-k">=</span> plt.subplots(<span class="pl-v">figsize</span><span class="pl-k">=</span>(<span class="pl-c1">12</span>, <span class="pl-c1">7</span>))</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC13" class="blob-code blob-code-inner js-file-line">ax.plot(T, Vy[:, <span class="pl-c1">0</span>])</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC14" class="blob-code blob-code-inner js-file-line">ax.set_xlabel(<span class="pl-s"><span class="pl-pds">'</span>Time (ms)<span class="pl-pds">'</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC15" class="blob-code blob-code-inner js-file-line">ax.set_ylabel(<span class="pl-s"><span class="pl-pds">'</span>Vm (mV)<span class="pl-pds">'</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC16" class="blob-code blob-code-inner js-file-line">ax.set_title(<span class="pl-s"><span class="pl-pds">'</span>Neuron potential with two spikes<span class="pl-pds">'</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC17" class="blob-code blob-code-inner js-file-line">plt.grid()</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC18" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC19" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Trajectories with limit cycles</span></td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L20" class="blob-num js-line-number" data-line-number="20"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC20" class="blob-code blob-code-inner js-file-line">fig, ax <span class="pl-k">=</span> plt.subplots(<span class="pl-v">figsize</span><span class="pl-k">=</span>(<span class="pl-c1">10</span>, <span class="pl-c1">10</span>))</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L21" class="blob-num js-line-number" data-line-number="21"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC21" class="blob-code blob-code-inner js-file-line">ax.plot(Vy[:, <span class="pl-c1">0</span>], Vy[:, <span class="pl-c1">1</span>], <span class="pl-v">label</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>Vm - n<span class="pl-pds">'</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L22" class="blob-num js-line-number" data-line-number="22"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC22" class="blob-code blob-code-inner js-file-line">ax.plot(Vy[:, <span class="pl-c1">0</span>], Vy[:, <span class="pl-c1">2</span>], <span class="pl-v">label</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>Vm - m<span class="pl-pds">'</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L23" class="blob-num js-line-number" data-line-number="23"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC23" class="blob-code blob-code-inner js-file-line">ax.set_title(<span class="pl-s"><span class="pl-pds">'</span>Limit cycles<span class="pl-pds">'</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L24" class="blob-num js-line-number" data-line-number="24"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC24" class="blob-code blob-code-inner js-file-line">ax.legend()</td>
+      </tr>
+      <tr>
+        <td id="file-hodgkin-huxley-plots-py-L25" class="blob-num js-line-number" data-line-number="25"></td>
+        <td id="file-hodgkin-huxley-plots-py-LC25" class="blob-code blob-code-inner js-file-line">plt.grid()</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/giuseppebonaccorso/60ce3eb3a829b94abf64ab2b7a56aaef/raw/d8fc848ee1b749e4d72fe8829cf7339c566b0350/hodgkin-huxley-plots.py" style="float:right">view raw</a>
+        <a href="https://gist.github.com/giuseppebonaccorso/60ce3eb3a829b94abf64ab2b7a56aaef#file-hodgkin-huxley-plots-py">hodgkin-huxley-plots.py</a>
+        hosted with <img draggable="false" class="emoji" alt="❤" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/2764.svg"> by <a href="https://github.com/">GitHub</a>
+      </div>
+    </div>
+</div>
+<noscript>View the code on <a href="https://gist.github.com/giuseppebonaccorso/60ce3eb3a829b94abf64ab2b7a56aaef">Gist</a>.</noscript></div>
+<p>References:</p>
+<ol>
+<li>Hodgkin, A. L., Huxley, A. F., (1952), <a href="http://onlinelibrary.wiley.com/doi/10.1113/jphysiol.1952.sp004764/abstract" target="_blank" rel="noopener">A quantitative description of membrane current and its application to conduction and excitation in nerve.</a> The Journal of Physiology, 117 doi: 10.1113/jphysiol.1952.sp004764</li>
+<li>Abbott L. F., Dayan P.,&nbsp;<a href="https://www.amazon.com/Theoretical-Neuroscience-Computational-Mathematical-Modeling-ebook/dp/B00MHAUY7U/ref=sr_1_1?s=digital-text&amp;ie=UTF8&amp;qid=1503135145&amp;sr=1-1&amp;keywords=neuroscience+abbott" target="_blank" rel="noopener">Theoretical Neuroscience: Computational and Mathematical Modeling of Neural Systems</a>, The MIT Press</li>
+</ol>
+<p>See also:</p>
+<div class="embedly-card"><div class="embedly-card-hug" style="max-width: 600px; padding: 0px; position: relative; min-width: 200px; margin: 5px auto;"><iframe scrolling="no" allowtransparency="true" allowfullscreen="true" id="emb_pg16ur" class="embedly-card" style="border: medium none; position: relative; visibility: visible; display: block; margin: 0px; padding: 0px; max-width: 100%; min-width: 200px;" width="600" height="465" frameborder="0"></iframe><div class="embdscl0"><a class="embd-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F%23e.pg16ur.i0tp91"><i></i></a><a class="embd-twitter" href="https://twitter.com/intent/tweet?text=ML%20Algorithms%20Addendum%3A%20Hebbian%20Learning%20-%20Giuseppe%20Bonaccorso&amp;url=https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F%23e.pg16ur.i0tp91&amp;via=GiuseppeB"><i></i></a><a class="embd-pinterest" href="https://www.pinterest.com/pin/create/button/?description=ML%20Algorithms%20Addendum%3A%20Hebbian%20Learning%20-%20Giuseppe%20Bonaccorso&amp;media=https%3A%2F%2Fwww.bonaccorso.eu%2Fwp-content%2Fuploads%2F2017%2F08%2Fml_hl_1.png&amp;url=https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F%23e.pg16ur.i0tp91"><i></i></a><a class="embd-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F%23e.pg16ur.i0tp91"><i></i></a><a class="embd-card"><i></i></a></div></div></div>
+<p><script async="" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/platform.js" charset="UTF-8" type="text/javascript"></script></p>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon sd-sharing"><h3 class="sd-title">Share:</h3><div class="sd-content"><ul><li class="share-twitter"><a rel="nofollow noopener noreferrer" data-shared="sharing-twitter-1150" class="share-twitter sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/?share=twitter&amp;nb=1" target="_blank" title="Click to share on Twitter"><span></span><span class="sharing-screen-reader-text">Click to share on Twitter (Opens in new window)</span></a></li><li class="share-facebook"><a rel="nofollow noopener noreferrer" data-shared="sharing-facebook-1150" class="share-facebook sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/?share=facebook&amp;nb=1" target="_blank" title="Click to share on Facebook"><span></span><span class="sharing-screen-reader-text">Click to share on Facebook (Opens in new window)</span></a></li><li class="share-linkedin"><a rel="nofollow noopener noreferrer" data-shared="sharing-linkedin-1150" class="share-linkedin sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/?share=linkedin&amp;nb=1" target="_blank" title="Click to share on LinkedIn"><span></span><span class="sharing-screen-reader-text">Click to share on LinkedIn (Opens in new window)</span></a></li><li class="share-pocket"><a rel="nofollow noopener noreferrer" data-shared="" class="share-pocket sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/?share=pocket&amp;nb=1" target="_blank" title="Click to share on Pocket"><span></span><span class="sharing-screen-reader-text">Click to share on Pocket (Opens in new window)</span></a></li><li class="share-tumblr"><a rel="nofollow noopener noreferrer" data-shared="" class="share-tumblr sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/?share=tumblr&amp;nb=1" target="_blank" title="Click to share on Tumblr"><span></span><span class="sharing-screen-reader-text">Click to share on Tumblr (Opens in new window)</span></a></li><li class="share-reddit"><a rel="nofollow noopener noreferrer" data-shared="" class="share-reddit sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/?share=reddit&amp;nb=1" target="_blank" title="Click to share on Reddit"><span></span><span class="sharing-screen-reader-text">Click to share on Reddit (Opens in new window)</span></a></li><li class="share-pinterest"><a rel="nofollow noopener noreferrer" data-shared="sharing-pinterest-1150" class="share-pinterest sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/?share=pinterest&amp;nb=1" target="_blank" title="Click to share on Pinterest"><span></span><span class="sharing-screen-reader-text">Click to share on Pinterest (Opens in new window)</span></a></li><li class="share-skype"><a rel="nofollow noopener noreferrer" data-shared="sharing-skype-1150" class="share-skype sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/?share=skype&amp;nb=1" target="_blank" title="Click to share on Skype"><span></span><span class="sharing-screen-reader-text">Click to share on Skype (Opens in new window)</span></a></li><li class="share-jetpack-whatsapp"><a rel="nofollow noopener noreferrer" data-shared="" class="share-jetpack-whatsapp sd-button share-icon no-text" href="https://api.whatsapp.com/send?text=Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F" target="_blank" title="Click to share on WhatsApp"><span></span><span class="sharing-screen-reader-text">Click to share on WhatsApp (Opens in new window)</span></a></li><li class="share-telegram"><a rel="nofollow noopener noreferrer" data-shared="" class="share-telegram sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/?share=telegram&amp;nb=1" target="_blank" title="Click to share on Telegram"><span></span><span class="sharing-screen-reader-text">Click to share on Telegram (Opens in new window)</span></a></li><li class="share-email share-service-visible"><a rel="nofollow noopener noreferrer" data-shared="" class="share-email sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/?share=email&amp;nb=1" target="_blank" title="Click to email this to a friend"><span></span><span class="sharing-screen-reader-text">Click to email this to a friend (Opens in new window)</span></a></li><li class="share-print"><a rel="nofollow noopener noreferrer" data-shared="" class="share-print sd-button share-icon no-text" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/#print" target="_blank" title="Click to print"><span></span><span class="sharing-screen-reader-text">Click to print (Opens in new window)</span></a></li><li class="share-end"></li></ul></div></div></div>
+<div id="jp-relatedposts" class="jp-relatedposts" style="display: block;">
+<h3 class="jp-relatedposts-headline"><em>You can also be interested in these articles:</em></h3>
+<div class="jp-relatedposts-items jp-relatedposts-items-visual jp-relatedposts-grid "><div class="jp-relatedposts-post jp-relatedposts-post0 jp-relatedposts-post-thumbs" data-post-id="1167" data-post-format="false"><a class="jp-relatedposts-post-a" href="https://www.bonaccorso.eu/2017/08/21/ml-algorithms-addendum-hebbian-learning/" title="ML Algorithms Addendum: Hebbian Learning
+
+Hebbian Learning is one the most famous learning theories, proposed by the Canadian psychologist Donald Hebb in 1949, many years before his results were confirmed through neuroscientific experiments. Artificial Intelligence researchers immediately understood the importance of his theory when applied to artificial neural networks and, even if more efficient algorithms…" rel="nofollow" data-origin="1150" data-position="0"><img class="jp-relatedposts-post-img" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/ml_hl_6-768x586.png" alt="ML Algorithms Addendum: Hebbian Learning" width="350"></a><h4 class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://www.bonaccorso.eu/2017/08/21/ml-algorithms-addendum-hebbian-learning/" title="ML Algorithms Addendum: Hebbian Learning
+
+Hebbian Learning is one the most famous learning theories, proposed by the Canadian psychologist Donald Hebb in 1949, many years before his results were confirmed through neuroscientific experiments. Artificial Intelligence researchers immediately understood the importance of his theory when applied to artificial neural networks and, even if more efficient algorithms…" rel="nofollow" data-origin="1150" data-position="0">ML Algorithms Addendum: Hebbian Learning</a></h4><p class="jp-relatedposts-post-excerpt">Hebbian
+ Learning is one the most famous learning theories, proposed by the 
+Canadian psychologist Donald Hebb in 1949, many years before his results
+ were confirmed through neuroscientific experiments. Artificial 
+Intelligence researchers immediately understood the importance of his 
+theory when applied to artificial neural networks and, even if more 
+efficient algorithms…</p><p class="jp-relatedposts-post-date" style="display: block;">08/21/2017</p></div><div class="jp-relatedposts-post jp-relatedposts-post1 jp-relatedposts-post-thumbs" data-post-id="1726" data-post-format="false"><a class="jp-relatedposts-post-a" href="https://www.bonaccorso.eu/2017/10/22/a-glimpse-into-self-organizing-maps-som/" title="A glimpse into the Self-Organizing Maps (SOM)
+
+Self-Organizing Maps (SOM) are neural structures proposed for the first time by the computer scientist T. Kohonen in the late 1980s (that's why they are also known as Kohonen Networks). Their peculiarities are the ability to auto-cluster data according to the topological features of the samples and the approach to…" rel="nofollow" data-origin="1150" data-position="1"><img class="jp-relatedposts-post-img" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/som_8.png" alt="A glimpse into the Self-Organizing Maps (SOM)" width="350"></a><h4 class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://www.bonaccorso.eu/2017/10/22/a-glimpse-into-self-organizing-maps-som/" title="A glimpse into the Self-Organizing Maps (SOM)
+
+Self-Organizing Maps (SOM) are neural structures proposed for the first time by the computer scientist T. Kohonen in the late 1980s (that's why they are also known as Kohonen Networks). Their peculiarities are the ability to auto-cluster data according to the topological features of the samples and the approach to…" rel="nofollow" data-origin="1150" data-position="1">A glimpse into the Self-Organizing Maps (SOM)</a></h4><p class="jp-relatedposts-post-excerpt">Self-Organizing
+ Maps (SOM) are neural structures proposed for the first time by the 
+computer scientist T. Kohonen in the late 1980s (that's why they are 
+also known as Kohonen Networks). Their peculiarities are the ability to 
+auto-cluster data according to the topological features of the samples 
+and the approach to…</p><p class="jp-relatedposts-post-date" style="display: block;">10/22/2017</p></div><div class="jp-relatedposts-post jp-relatedposts-post2 jp-relatedposts-post-thumbs" data-post-id="1376" data-post-format="false"><a class="jp-relatedposts-post-a" href="https://www.bonaccorso.eu/2017/09/20/ml-algorithms-addendum-hopfield-networks/" title="ML Algorithms Addendum: Hopfield Networks
+
+Hopfield networks (named after the scientist John Hopfield) are a family of recurrent neural networks with bipolar thresholded neurons. Even if they are have replaced by more efficient models, they represent an excellent example of associative memory, based on the shaping of an energy surface. In the following picture, there's…" rel="nofollow" data-origin="1150" data-position="2"><img class="jp-relatedposts-post-img" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/mla_hn_1.png" alt="ML Algorithms Addendum: Hopfield Networks" width="350"></a><h4 class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://www.bonaccorso.eu/2017/09/20/ml-algorithms-addendum-hopfield-networks/" title="ML Algorithms Addendum: Hopfield Networks
+
+Hopfield networks (named after the scientist John Hopfield) are a family of recurrent neural networks with bipolar thresholded neurons. Even if they are have replaced by more efficient models, they represent an excellent example of associative memory, based on the shaping of an energy surface. In the following picture, there's…" rel="nofollow" data-origin="1150" data-position="2">ML Algorithms Addendum: Hopfield Networks</a></h4><p class="jp-relatedposts-post-excerpt">Hopfield
+ networks (named after the scientist John Hopfield) are a family of 
+recurrent neural networks with bipolar thresholded neurons. Even if they
+ are have replaced by more efficient models, they represent an excellent
+ example of associative memory, based on the shaping of an energy 
+surface. In the following picture, there's…</p><p class="jp-relatedposts-post-date" style="display: block;">09/20/2017</p></div></div></div> </div>
+<footer class="entry-footer clearfix"><span class="tags-links"><a href="https://www.bonaccorso.eu/tag/hodgkin-huxley/" rel="tag">hodgkin-huxley</a><a href="https://www.bonaccorso.eu/tag/neural-networks/" rel="tag">Neural networks</a><a href="https://www.bonaccorso.eu/tag/neuron/" rel="tag">neuron</a><a href="https://www.bonaccorso.eu/tag/neuroscience/" rel="tag">neuroscience</a><a href="https://www.bonaccorso.eu/tag/python/" rel="tag">python</a><a href="https://www.bonaccorso.eu/tag/simulation/" rel="tag">simulation</a></span></footer> </div>
+</article>
+<nav class="navigation post-navigation" role="navigation">
+<h2 class="screen-reader-text">Post navigation</h2>
+<div class="nav-links"><div class="nav-previous"><a href="https://www.bonaccorso.eu/2017/08/18/ml-algorithms-addendum-mutual-information-in-classification-tasks/" rel="prev"><i class="fa fa-caret-left"></i> ML Algorithms addendum: Mutual information in classification tasks</a></div><div class="nav-next"><a href="https://www.bonaccorso.eu/2017/08/21/ml-algorithms-addendum-hebbian-learning/" rel="next">ML Algorithms Addendum: Hebbian Learning <i class="fa fa-caret-right"></i></a></div></div>
+</nav>
+<div id="comments" class="comments-area">
+</div>
+<div id="respond" class="comment-respond">
+<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/#respond" style="display:none;">Cancel reply</a></small>
+</h3>
+<form id="commentform" class="comment-form">
+<iframe title="Comment Form" src="https://jetpack.wordpress.com/jetpack-comment/?blogid=100107841&amp;postid=1150&amp;comment_registration=0&amp;require_name_email=1&amp;stc_enabled=1&amp;stb_enabled=1&amp;show_avatars=1&amp;avatar_default=gravatar_default&amp;greeting=Leave+a+Reply&amp;greeting_reply=Leave+a+Reply+to+%25s&amp;color_scheme=light&amp;lang=en_US&amp;jetpack_version=7.0.1&amp;show_cookie_consent=10&amp;has_cookie_consent=0&amp;sig=220fe7a0b80e0d679002af2b2dfbeb637e5dddc0#parent=https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F" style="width:100%; height: 430px; border:0;" name="jetpack_remote_comment" class="jetpack_remote_comment" id="jetpack_remote_comment" sandbox="allow-same-origin allow-top-navigation allow-scripts allow-forms allow-popups" scrolling="no"></iframe>
+<!--[if !IE]><!-->
+<script type="text/javascript">
+						document.addEventListener('DOMContentLoaded', function () {
+							var commentForms = document.getElementsByClassName('jetpack_remote_comment');
+							for (var i = 0; i < commentForms.length; i++) {
+								commentForms[i].allowTransparency = false;
+								commentForms[i].scrolling = 'no';
+							}
+						});
+					</script>
+<!--<![endif]-->
+<input id="ak_js" name="ak_js" type="hidden" value="1556993260275"></form>
+</div>
+<input type="hidden" name="comment_parent" id="comment_parent" value="">
+</main>
+</div>
+</div>
+<div class="col-md-4 sidebar-right">
+<aside id="secondary" class="widget-area">
+<section id="mks_social_widget-2" class="widget mks_social_widget"><h2 class="widget-title">Follow Me</h2>
+<ul class="mks_social_widget_ul">
+<li><a href="https://www.linkedin.com/in/giuseppebonaccorso/" title="Linkedin" class="socicon-linkedin soc_rounded" target="_blank" style="width: 30px; height: 30px; font-size: 16px;line-height:35px;"><span>linkedin</span></a></li>
+<li><a href="https://twitter.com/GiuseppeB/" title="Twitter" class="socicon-twitter soc_rounded" target="_blank" style="width: 30px; height: 30px; font-size: 16px;line-height:35px;"><span>twitter</span></a></li>
+<li><a href="https://www.facebook.com/giuseppe.bonaccorso/" title="Facebook" class="socicon-facebook soc_rounded" target="_blank" style="width: 30px; height: 30px; font-size: 16px;line-height:35px;"><span>facebook</span></a></li>
+<li><a href="https://github.com/giuseppebonaccorso/" title="GitHub" class="socicon-github soc_rounded" target="_blank" style="width: 30px; height: 30px; font-size: 16px;line-height:35px;"><span>github</span></a></li>
+<li><a href="https://www.instagram.com/giuseppebonaccorso/" title="Instagram" class="socicon-instagram soc_rounded" target="_blank" style="width: 30px; height: 30px; font-size: 16px;line-height:35px;"><span>instagram</span></a></li>
+<li><a href="https://www.amazon.com/author/giuseppebonaccorso" title="Amazon" class="socicon-amazon soc_rounded" target="_blank" style="width: 30px; height: 30px; font-size: 16px;line-height:35px;"><span>amazon</span></a></li>
+<li><a href="https://medium.com/@giuseppe.bonaccorso" title="Medium" class="socicon-medium soc_rounded" target="_blank" style="width: 30px; height: 30px; font-size: 16px;line-height:35px;"><span>medium</span></a></li>
+<li><a href="https://www.bonaccorso.eu/feed/" title="RSS" class="socicon-rss soc_rounded" target="_blank" style="width: 30px; height: 30px; font-size: 16px;line-height:35px;"><span>rss</span></a></li>
+</ul>
+</section><section id="search-2" class="widget widget_search"><h2 class="widget-title">Search articles</h2>
+<form role="search" method="get" class="search-form" action="https://www.bonaccorso.eu/">
+<div class="input-group">
+<input type="search" id="search-form-5c784075cc7b6" class="search-field form-control" placeholder="Search …" name="s">
+<span class="input-group-btn">
+<button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+</span>
+</div>
+</form>
+</section> <section id="recent-posts-2" class="widget widget_recent_entries"> <h2 class="widget-title">Latest blog posts</h2> <ul>
+<li>
+<a href="https://www.bonaccorso.eu/2018/08/28/machine-learning-algorithms-second-edition/">Machine Learning Algorithms – Second Edition</a>
+<span class="post-date">08/28/2018</span>
+</li>
+<li>
+<a href="https://www.bonaccorso.eu/2018/07/10/recommendations-user-profiling-implicit-feedbacks/">Recommendations and User-Profiling from Implicit Feedbacks</a>
+<span class="post-date">07/10/2018</span>
+</li>
+<li>
+<a href="https://www.bonaccorso.eu/2018/06/29/recommendations-really-helpful-brief-non-technical-discussion/">Are recommendations really helpful? A brief non-technical discussion</a>
+<span class="post-date">06/29/2018</span>
+</li>
+<li>
+<a href="https://www.bonaccorso.eu/2018/06/22/a-book-that-every-data-scientist-should-read/">A book that every data scientist should read</a>
+<span class="post-date">06/22/2018</span>
+</li>
+<li>
+<a href="https://www.bonaccorso.eu/2018/05/24/mastering-machine-learning-algorithms/">Mastering Machine Learning Algorithms</a>
+<span class="post-date">05/24/2018</span>
+</li>
+</ul>
+</section><section id="blog_subscription-2" class="widget widget_blog_subscription jetpack_subscription_widget"><h2 class="widget-title">Subscribe to this blog</h2>
+<form action="#" method="post" accept-charset="utf-8" id="subscribe-blog-blog_subscription-2">
+<p>Join 2,190 other subscribers</p>
+<p id="subscribe-email">
+<label id="jetpack-subscribe-label" class="screen-reader-text" for="subscribe-field-blog_subscription-2">
+Email </label>
+<input type="email" name="email" required="required" class="required" id="subscribe-field-blog_subscription-2" placeholder="Email">
+</p>
+<p id="subscribe-submit">
+<input type="hidden" name="action" value="subscribe">
+<input type="hidden" name="source" value="https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/">
+<input type="hidden" name="sub-type" value="widget">
+<input type="hidden" name="redirect_fragment" value="blog_subscription-2">
+<input type="submit" value="Subscribe" name="jetpack_subscriptions_widget">
+</p>
+</form>
+</section><section id="media_image-2" class="widget widget_media_image"><a href="https://www.bonaccorso.eu/category/machine-learning/machine-learning-algorithms-addenda/"><img src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/mla_addenda-300x300.jpg" class="image wp-image-1408  attachment-medium size-medium" alt="" style="max-width: 100%; height: auto;" srcset="https://www.bonaccorso.eu/wp-content/uploads/2017/09/mla_addenda-300x300.jpg 300w, https://www.bonaccorso.eu/wp-content/uploads/2017/09/mla_addenda-150x150.jpg 150w, https://www.bonaccorso.eu/wp-content/uploads/2017/09/mla_addenda-768x768.jpg 768w, https://www.bonaccorso.eu/wp-content/uploads/2017/09/mla_addenda-1024x1024.jpg 1024w, https://www.bonaccorso.eu/wp-content/uploads/2017/09/mla_addenda-e1506064584604.jpg 250w" sizes="(max-width: 300px) 100vw, 300px" data-attachment-id="1408" data-permalink="https://www.bonaccorso.eu/mla_addenda/" data-orig-file="https://www.bonaccorso.eu/wp-content/uploads/2017/09/mla_addenda-e1506064584604.jpg" data-orig-size="250,250" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="mla_addenda" data-image-description="" data-medium-file="https://www.bonaccorso.eu/wp-content/uploads/2017/09/mla_addenda-300x300.jpg" data-large-file="https://www.bonaccorso.eu/wp-content/uploads/2017/09/mla_addenda-1024x1024.jpg" width="300" height="300"></a></section><section id="twitter_timeline-2" class="widget widget_twitter_timeline"><h2 class="widget-title">Follow me on Twitter</h2><a class="twitter-timeline" data-theme="light" data-link-color="#f96e5b" data-border-color="#e8e8e8" data-tweet-limit="1" data-lang="EN" data-partner="jetpack" data-chrome="noborders transparent" href="https://twitter.com/GiuseppeB">My Tweets</a></section></aside>
+</div>
+</div>
+</div>
+<footer id="colophon" class="site-footer">
+<div class="site-info clearfix">
+<div class="site-info-copyright ">
+Copyright © 2019 <a href="https://www.bonaccorso.eu/">Giuseppe Bonaccorso</a>. All Rights Reserved. <a href="https://www.iubenda.com/privacy-policy/331721">Privacy policy</a> - <a href="https://www.iubenda.com/privacy-policy/331721/cookie-policy">Cookie policy</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+
+<script type="text/javascript">
+var sbiajaxurl = "https://www.bonaccorso.eu/wp-admin/admin-ajax.php";
+</script>
+<div style="display:none">
+</div>
+<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/www.bonaccorso.eu\/2017\/08\/19\/hodgkin-huxley-spiking-neuron-model-python\/":1150};
+	</script>
+
+<!--[if lte IE 8]>
+<link rel='stylesheet' id='jetpack-carousel-ie8fix-css'  href='https://www.bonaccorso.eu/wp-content/plugins/jetpack/modules/carousel/jetpack-carousel-ie8fix.css?ver=20121024' type='text/css' media='all' />
+<![endif]-->
+<script type="text/javascript">
+/* <![CDATA[ */
+var codePrettifyLoaderBaseUrl = "https:\/\/www.bonaccorso.eu\/wp-content\/plugins\/code-prettify\/prettify";
+/* ]]> */
+</script>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+var wpcf7 = {"apiSettings":{"root":"https:\/\/www.bonaccorso.eu\/wp-json\/contact-form-7\/v1","namespace":"contact-form-7\/v1"},"cached":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/scripts.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/devicepx-jetpack.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/api.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/gprofiles.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/wpgroho.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/bootstrap.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/ie10-viewport-bug-workaround.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/theme.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/comment-reply.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/twitter-timeline.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/wp-embed.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/script.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/spin.js"></script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/jquery_002.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var jetpackCarouselStrings = {"widths":[370,700,1000,1200,1400,2000],"is_logged_in":"","lang":"en","ajaxurl":"https:\/\/www.bonaccorso.eu\/wp-admin\/admin-ajax.php","nonce":"60d23544ed","display_exif":"1","display_geo":"1","single_image_gallery":"1","single_image_gallery_media_file":"","background_color":"black","comment":"Comment","post_comment":"Post Comment","write_comment":"Write a Comment...","loading_comments":"Loading Comments...","download_original":"View full size <span class=\"photo-size\">{0}<span class=\"photo-size-times\">\u00d7<\/span>{1}<\/span>","no_comment_text":"Please be sure to submit some text with your comment.","no_comment_email":"Please provide an email address to comment.","no_comment_author":"Please provide your name to comment.","comment_post_error":"Sorry, but there was an error posting your comment. Please try again later.","comment_approved":"Your comment was approved.","comment_unapproved":"Your comment is in moderation.","camera":"Camera","aperture":"Aperture","shutter_speed":"Shutter Speed","focal_length":"Focal Length","copyright":"Copyright","comment_registration":"0","require_name_email":"1","login_url":"https:\/\/www.bonaccorso.eu\/gblogin\/?redirect_to=https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F","blog_id":"1","meta_data":["camera","aperture","shutter_speed","focal_length","copyright"],"local_comments_commenting_as":"<fieldset><label for=\"email\">Email (Required)<\/label> <input type=\"text\" name=\"email\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-email-field\" \/><\/fieldset><fieldset><label for=\"author\">Name (Required)<\/label> <input type=\"text\" name=\"author\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-author-field\" \/><\/fieldset><fieldset><label for=\"url\">Website<\/label> <input type=\"text\" name=\"url\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-url-field\" \/><\/fieldset>"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/jetpack-carousel.js"></script>
+<script async="async" type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/form.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1","is_stats_active":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/sharing.js"></script>
+<script type="text/javascript">
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-twitter', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-facebook', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-linkedin', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomlinkedin', 'menubar=1,resizable=1,width=580,height=450' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-pocket', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcompocket', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-tumblr', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtumblr', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-skype', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomskype', 'menubar=1,resizable=1,width=305,height=665' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-telegram', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtelegram', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+</script>
+<script type="text/javascript">
+( function( grecaptcha, sitekey ) {
+
+	var wpcf7recaptcha = {
+		execute: function() {
+			grecaptcha.execute(
+				sitekey,
+				{ action: 'homepage' }
+			).then( function( token ) {
+				var forms = document.getElementsByTagName( 'form' );
+
+				for ( var i = 0; i < forms.length; i++ ) {
+					var fields = forms[ i ].getElementsByTagName( 'input' );
+
+					for ( var j = 0; j < fields.length; j++ ) {
+						var field = fields[ j ];
+
+						if ( 'g-recaptcha-response' === field.getAttribute( 'name' ) ) {
+							field.setAttribute( 'value', token );
+							break;
+						}
+					}
+				}
+			} );
+		}
+	};
+
+	grecaptcha.ready( wpcf7recaptcha.execute );
+
+	document.addEventListener( 'wpcf7submit', wpcf7recaptcha.execute, false );
+
+} )( grecaptcha, '6LcV7oIUAAAAAHwnf1ez-iMaE3B_lK_yQDAG1exQ' );
+</script>
+<!--[if IE]>
+		<script type="text/javascript">
+			if ( 0 === window.location.hash.indexOf( '#comment-' ) ) {
+				// window.location.reload() doesn't respect the Hash in IE
+				window.location.hash = window.location.hash;
+			}
+		</script>
+		<![endif]-->
+<script type="text/javascript">
+			(function () {
+				var comm_par_el = document.getElementById( 'comment_parent' ),
+					comm_par = ( comm_par_el && comm_par_el.value ) ? comm_par_el.value : '',
+					frame = document.getElementById( 'jetpack_remote_comment' ),
+					tellFrameNewParent;
+
+				tellFrameNewParent = function () {
+					if ( comm_par ) {
+						frame.src = "https://jetpack.wordpress.com/jetpack-comment/?blogid=100107841&postid=1150&comment_registration=0&require_name_email=1&stc_enabled=1&stb_enabled=1&show_avatars=1&avatar_default=gravatar_default&greeting=Leave+a+Reply&greeting_reply=Leave+a+Reply+to+%25s&color_scheme=light&lang=en_US&jetpack_version=7.0.1&show_cookie_consent=10&has_cookie_consent=0&sig=220fe7a0b80e0d679002af2b2dfbeb637e5dddc0#parent=https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F" + '&replytocom=' + parseInt( comm_par, 10 ).toString();
+					} else {
+						frame.src = "https://jetpack.wordpress.com/jetpack-comment/?blogid=100107841&postid=1150&comment_registration=0&require_name_email=1&stc_enabled=1&stb_enabled=1&show_avatars=1&avatar_default=gravatar_default&greeting=Leave+a+Reply&greeting_reply=Leave+a+Reply+to+%25s&color_scheme=light&lang=en_US&jetpack_version=7.0.1&show_cookie_consent=10&has_cookie_consent=0&sig=220fe7a0b80e0d679002af2b2dfbeb637e5dddc0#parent=https%3A%2F%2Fwww.bonaccorso.eu%2F2017%2F08%2F19%2Fhodgkin-huxley-spiking-neuron-model-python%2F";
+					}
+				};
+
+				
+				if ( 'undefined' !== typeof addComment ) {
+					addComment._Jetpack_moveForm = addComment.moveForm;
+
+					addComment.moveForm = function ( commId, parentId, respondId, postId ) {
+						var returnValue = addComment._Jetpack_moveForm( commId, parentId, respondId, postId ),
+							cancelClick, cancel;
+
+						if ( false === returnValue ) {
+							cancel = document.getElementById( 'cancel-comment-reply-link' );
+							cancelClick = cancel.onclick;
+							cancel.onclick = function () {
+								var cancelReturn = cancelClick.call( this );
+								if ( false !== cancelReturn ) {
+									return cancelReturn;
+								}
+
+								if ( ! comm_par ) {
+									return cancelReturn;
+								}
+
+								comm_par = 0;
+
+								tellFrameNewParent();
+
+								return cancelReturn;
+							};
+						}
+
+						if ( comm_par == parentId ) {
+							return returnValue;
+						}
+
+						comm_par = parentId;
+
+						tellFrameNewParent();
+
+						return returnValue;
+					};
+				}
+
+				
+				// Do the post message bit after the dom has loaded.
+				document.addEventListener( 'DOMContentLoaded', function () {
+					var iframe_url = "https:\/\/jetpack.wordpress.com";
+					if ( window.postMessage ) {
+						if ( document.addEventListener ) {
+							window.addEventListener( 'message', function ( event ) {
+								var origin = event.origin.replace( /^http:\/\//i, 'https://' );
+								if ( iframe_url.replace( /^http:\/\//i, 'https://' ) !== origin ) {
+									return;
+								}
+								jQuery( frame ).height( event.data );
+							});
+						} else if ( document.attachEvent ) {
+							window.attachEvent( 'message', function ( event ) {
+								var origin = event.origin.replace( /^http:\/\//i, 'https://' );
+								if ( iframe_url.replace( /^http:\/\//i, 'https://' ) !== origin ) {
+									return;
+								}
+								jQuery( frame ).height( event.data );
+							});
+						}
+					}
+				})
+
+			})();
+		</script>
+<script async="async" type="text/javascript" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/e-201909.js" defer="defer"></script>
+<script type="text/javascript">
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:7.0.1',blog:'100107841',post:'1150',tz:'1',srv:'www.bonaccorso.eu'} ]);
+	_stq.push([ 'clickTrackerInit', '100107841', '1150' ]);
+</script>
+
+
+<cloudflare-app app="cookiless" style="z-index: 3;"><cookiless-div class="ckcontent" style="opacity: 0.7;"><policy-text>By
+ using this website, you agree that we and our partners may set cookies 
+for purposes such as analytics. Please read our privacy and cookie 
+policies (GDPR compliant) in the disclaimer page or in the footer. 
+Through these pages it's also possible to opt-out from specific 
+services.</policy-text><a class="iAccept">I Agree</a></cookiless-div></cloudflare-app><div id="sharing_email" style="display: none;">
+<form action="/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/" method="post">
+<label for="target_email">Send to Email Address</label>
+<input type="email" name="target_email" id="target_email">
+<label for="source_name">Your Name</label>
+<input type="text" name="source_name" id="source_name">
+<label for="source_email">Your Email Address</label>
+<input type="email" name="source_email" id="source_email">
+<input type="text" id="jetpack-source_f_name" name="source_f_name" class="input" size="25" autocomplete="off" title="This field is for validation and should not be changed">
+<img style="float: right; display: none" class="loading" src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/loading.gif" alt="loading" width="16" height="16">
+<input type="submit" value="Send Email" class="sharing_send">
+<a rel="nofollow" href="#cancel" class="sharing_cancel" role="button">Cancel</a>
+<div class="errors errors-1" style="display: none;">
+Post was not sent - check your email addresses! </div>
+<div class="errors errors-2" style="display: none;">
+Email check failed, please try again </div>
+<div class="errors errors-3" style="display: none;">
+Sorry, your blog cannot share posts by email. </div>
+</form>
+</div><div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s ease 0s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px;"><div class="grecaptcha-logo"><iframe src="Hodgkin-Huxley%20spiking%20neuron%20model%20in%20Python%20-%20Giuseppe%20Bonaccorso_files/anchor.html" role="presentation" name="a-d4729rzbkhqa" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" width="256" height="60" frameborder="0"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;">03AOLTBLTkxFc3hmVwzfG-7IAIWICloKVeNeHY_uwbVw3l6nfrPooIBAjQIGsaPoewbJNDgKX2q_RHcoO6JZXRqXERKDIz0W0UbM4yfM-vgBfFwxTV3hU2fmsrT8CoGDUS-zPgSCSybKF-MjaPuzRadrVbUKGSR_XrJiljM_RMFyqHMCmkAU8VSS0eY8ppOozyf2rhSoJkBbWJVkSlWUxV1Z9YaefETgWccV4jCEoj8UbxqiissVLOE6tfhiwiRggDRA38xNPIbxs7--yYCgGzdt8e2UNaNfXriXjoWRg5F2fv9kDCW4Tt9mtFoLh0Ee8LsO-GUOjGEoPA</textarea></div></div></body></html>
